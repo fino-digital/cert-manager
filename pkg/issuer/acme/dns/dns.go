@@ -18,6 +18,7 @@ import (
 	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/azuredns"
 	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/clouddns"
 	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/cloudflare"
+	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/otc"
 	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/route53"
 	"github.com/jetstack/cert-manager/pkg/issuer/acme/dns/util"
 )
@@ -40,6 +41,7 @@ type dnsProviderConstructors struct {
 	cloudFlare func(email, apikey string) (*cloudflare.DNSProvider, error)
 	route53    func(accessKey, secretKey, hostedZoneID, region string, ambient bool) (*route53.DNSProvider, error)
 	azureDNS   func(clientID, clientSecret, subscriptionID, tenentID, resourceGroupName, hostedZoneName string) (*azuredns.DNSProvider, error)
+	otc        func(domainName, userName, password, projectName, identityEndpoint string) (*otc.DNSProvider, error)
 }
 
 // Solver is a solver for the acme dns01 challenge.
@@ -232,6 +234,14 @@ func (s *Solver) solverForIssuerProvider(providerName string) (solver, error) {
 			providerConfig.AzureDNS.ResourceGroupName,
 			providerConfig.AzureDNS.HostedZoneName,
 		)
+	case providerConfig.OTC != nil:
+		impl, err = s.dnsProviderConstructors.otc(
+			providerConfig.OTC.DomainName,
+			providerConfig.OTC.UserName,
+			providerConfig.OTC.Password,
+			providerConfig.OTC.ProjectName,
+			providerConfig.OTC.IdentityEndpoint,
+		)
 	default:
 		return nil, fmt.Errorf("no dns provider config specified for provider %q", providerName)
 	}
@@ -250,6 +260,7 @@ func NewSolver(issuer v1alpha1.GenericIssuer, client kubernetes.Interface, secre
 			cloudflare.NewDNSProviderCredentials,
 			route53.NewDNSProvider,
 			azuredns.NewDNSProviderCredentials,
+			otc.NewDNSProviderCredentials,
 		},
 		ambientCredentials,
 	}

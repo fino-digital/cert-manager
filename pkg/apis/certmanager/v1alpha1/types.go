@@ -151,6 +151,7 @@ type ACMEIssuerDNS01Provider struct {
 	Cloudflare *ACMEIssuerDNS01ProviderCloudflare `json:"cloudflare,omitempty"`
 	Route53    *ACMEIssuerDNS01ProviderRoute53    `json:"route53,omitempty"`
 	AzureDNS   *ACMEIssuerDNS01ProviderAzureDNS   `json:"azuredns,omitempty"`
+	OTC        *ACMEIssuerDNS01ProviderOTC        `json:"otc,omitempty"`
 }
 
 // ACMEIssuerDNS01ProviderAkamai is a structure containing the DNS
@@ -196,6 +197,18 @@ type ACMEIssuerDNS01ProviderAzureDNS struct {
 
 	// + optional
 	HostedZoneName string `json:"hostedZoneName"`
+}
+
+// ACMEIssuerDNS01ProviderOTC is a structure containing the
+// configuration for Open Telekom Cloud
+type ACMEIssuerDNS01ProviderOTC struct {
+	DomainName  string `json:"domainName"`
+	UserName    string `json:"userName"`
+	Password    string `json:"password"`
+	ProjectName string `json:"projectName"`
+
+	// + optional
+	IdentityEndpoint string `json:"identityEndpoint"`
 }
 
 // IssuerStatus contains status information about an Issuer
