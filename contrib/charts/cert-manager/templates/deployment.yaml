@@ -25,6 +25,8 @@ spec:
       {{- end }}
     spec:
       serviceAccountName: {{ template "cert-manager.serviceAccountName" . }}
+      imagePullSecrets:
+        - name: {{ .Values.image.pullSecrets }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

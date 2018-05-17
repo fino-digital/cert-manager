@@ -4,9 +4,10 @@
 replicaCount: 1
 
 image:
-  repository: quay.io/jetstack/cert-manager-controller
-  tag: v0.3.0-alpha.2
+  repository: dockerhub.fino.digital/fino/cert-manager-controller
+  tag: 1
   pullPolicy: IfNotPresent
+  pullSecrets: dockerhub
 
 createCustomResource: true
 
