@@ -235,6 +235,9 @@ func (s *Solver) solverForIssuerProvider(providerName string) (solver, error) {
 			providerConfig.AzureDNS.HostedZoneName,
 		)
 	case providerConfig.OTC != nil:
+		// TODO: retrieve credentials from secrets
+		// TODO: support AK/SK instead of username+password
+
 		impl, err = s.dnsProviderConstructors.otc(
 			providerConfig.OTC.DomainName,
 			providerConfig.OTC.UserName,
